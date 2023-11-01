@@ -17,12 +17,20 @@ router.post('/', (req, res) => {
         .json({ added: { name: newItem.name, price: newItem.price } });
 });
 
-// Route to get a particular item based on name
+// Route to get a particular item
 router.get('/:name', (req, res) => {
-    const { name } = req.params;
-    const foundItem = items.find((item) => item.name === name);
+    const foundItem = items.find((item) => item.name === req.params.name);
     if (!foundItem) throw new ExpressError('Item not found.', 404);
     return res.status(200).json(foundItem);
+});
+
+// Route to update a particular item
+router.patch('/:name', (req, res) => {
+    const foundItem = items.find((item) => item.name === req.params.name);
+    if (!foundItem) throw new ExpressError('Item not found.', 404);
+    foundItem.name = req.body.name || foundItem.name;
+    foundItem.price = req.body.price || foundItem.price;
+    return res.json({ updated: foundItem });
 });
 
 module.exports = router;

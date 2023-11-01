@@ -5,7 +5,7 @@ const ExpressError = require('../expressError');
 
 // Route to get all items
 router.get('/', (req, res) => {
-    return res.status(200).json({ items });
+    return res.status(200).json(items);
 });
 
 // Route to add new item
@@ -31,6 +31,14 @@ router.patch('/:name', (req, res) => {
     foundItem.name = req.body.name || foundItem.name;
     foundItem.price = req.body.price || foundItem.price;
     return res.json({ updated: foundItem });
+});
+
+// Route to delete an item
+router.delete('/:name', (req, res) => {
+    const itemIndex = items.findIndex((item) => item.name === req.params.name);
+    if (itemIndex === -1) throw new ExpressError('Item not found.', 404);
+    items.splice(itemIndex, 1);
+    return res.json({ message: 'Deleted!' });
 });
 
 module.exports = router;

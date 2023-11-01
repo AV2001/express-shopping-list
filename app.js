@@ -8,9 +8,9 @@ app.use(express.json());
 app.use('/items', itemRoutes);
 
 app.use((err, req, res, next) => {
-    const status = err.status || 500;
     const message = err.message;
-    return res.status(message).json({
+    const status = err.status || 500;
+    return res.status(status).json({
         error: { message, status },
     });
 });

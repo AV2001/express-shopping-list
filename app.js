@@ -1,12 +1,17 @@
 const express = require('express');
+const app = express();
 const itemRoutes = require('./routes/itemRoutes');
 const ExpressError = require('./expressError');
-
-const app = express();
 
 app.use(express.json());
 app.use('/items', itemRoutes);
 
+// 404 handler
+app.use((req, res, next) => {
+    throw new ExpressError('Page not found!', 404);
+});
+
+// Error handler
 app.use((err, req, res, next) => {
     const message = err.message;
     const status = err.status || 500;
@@ -15,6 +20,4 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server running on port 3000.');
-});
+module.exports = app;

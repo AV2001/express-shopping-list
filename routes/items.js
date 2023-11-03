@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
     const newItem = req.body;
     const { name, price } = newItem;
     if (!name || !price)
-        throw new ExpressError('Name and price must be present.', 404);
+        throw new ExpressError('Name and price must be present.', 400);
     items.push(newItem);
     return res
         .status(201)

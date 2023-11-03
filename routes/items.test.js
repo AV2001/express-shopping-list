@@ -59,3 +59,39 @@ describe('POST /items', () => {
         expect(response.statusCode).toBe(400);
     });
 });
+
+describe('PATCH /items/:name', () => {
+    test('it should update the item based on the name that is passed and return the newly updated item', async () => {
+        const newItem = { name: 'bread', price: '0.99' };
+        const response = await request(app)
+            .patch(`/items/${item.name}`)
+            .send(newItem);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({ updated: newItem });
+    });
+
+    test('it should update item even if just the name is provided (keeps price intact)', async () => {
+        const response = await request(app)
+            .patch(`/items/${item.name}`)
+            .send({ name: 'bread' });
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({
+            updated: { name: 'bread', price: item.price },
+        });
+    });
+
+    test('it should update item even if just the price is provided (keeps name intact) ', async () => {
+        const response = await request(app)
+            .patch(`/items/${item.name}`)
+            .send({ price: 4.5 });
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({
+            updated: { name: item.name, price: 4.5 },
+        });
+    });
+
+    test('it should return 404 provided an invalid name', async () => {
+        const response = await request(app).patch('/items/cheerios');
+        expect(response.statusCode).toBe(404);
+    });
+});

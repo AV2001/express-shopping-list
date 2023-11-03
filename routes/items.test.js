@@ -21,6 +21,19 @@ describe('GET /items', () => {
     });
 });
 
+describe('GET /items/:name', () => {
+    test('it should return an item provided valid name', async () => {
+        const response = await request(app).get(`/items/${item.name}`);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual(item);
+    });
+
+    test('it should return 404 provided an invalid name', async () => {
+        const response = await request(app).get('/items/cheerios');
+        expect(response.statusCode).toBe(404);
+    });
+});
+
 describe('POST /items', () => {
     test('it should add an item', async () => {
         const newItem = { name: 'cheerios', price: 3.4 };
